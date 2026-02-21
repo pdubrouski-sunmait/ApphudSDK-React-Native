@@ -27,7 +27,7 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
     SdkHeaders.X_SDK = "reactnative"
     val nativeSdkVersion: String = SdkHeaders.X_SDK_VERSION
     if (!nativeSdkVersion.contains("(")) {
-      SdkHeaders.X_SDK_VERSION = "3.1.0" + "(${nativeSdkVersion})"
+      SdkHeaders.X_SDK_VERSION = "4.0.2" + "(${nativeSdkVersion})"
     }
   }
 
@@ -75,18 +75,6 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun paywalls(promise: Promise) {
-    Apphud.paywallsDidLoadCallback { list, error ->
-      if (error != null) {
-        promise.reject(error)
-        return@paywallsDidLoadCallback
-      }
-
-      promise.resolve(list.toWritableNativeArray { it.toMap() })
-    }
-  }
-
-  @ReactMethod
   fun paywallShown(options: ReadableMap) {
     val paywallIdentifier = options.getString("paywallIdentifier")
     val placementIdentifier = options.getString("placementIdentifier")
@@ -96,19 +84,6 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
         Apphud.paywallShown(paywall)
       }
     }
-  }
-
-  @ReactMethod
-  fun paywallClosed(options: ReadableMap) {
-    val paywallIdentifier = options.getString("paywallIdentifier")
-    val placementIdentifier = options.getString("placementIdentifier")
-
-    Utils.paywall(paywallIdentifier, placementIdentifier) { paywall ->
-      paywall?.let {
-        Apphud.paywallClosed(paywall)
-      }
-    }
-
   }
 
   @ReactMethod
