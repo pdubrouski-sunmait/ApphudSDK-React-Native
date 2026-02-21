@@ -8,7 +8,7 @@ class ApphudSdk: NSObject {
     ApphudHttpClient.shared.sdkType = "reactnative"
     let current = ApphudHttpClient.shared.sdkVersion
     if !current.contains("(") {
-      ApphudHttpClient.shared.sdkVersion = "3.1.0" + "(\(current))"
+      ApphudHttpClient.shared.sdkVersion = "4.0.2" + "(\(current))"
     }
   }
 

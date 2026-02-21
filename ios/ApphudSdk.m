@@ -26,9 +26,6 @@ RCT_EXTERN_METHOD(purchase:(NSDictionary*)args
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(paywalls:(RCTPromiseResolveBlock)resolve
-                  withRejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(subscription:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
@@ -51,7 +48,6 @@ RCT_EXTERN_METHOD(userId:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(collectDeviceIdentifiers)
 RCT_EXTERN_METHOD(setDeviceIdentifiers:(NSDictionary*)options)
 RCT_EXTERN_METHOD(paywallShown:(NSDictionary*)options)
-RCT_EXTERN_METHOD(paywallClosed:(NSDictionary*)options)
 RCT_EXTERN_METHOD(optOutOfTracking)
 RCT_EXTERN_METHOD(enableDebugLogs)
 RCT_EXTERN_METHOD(logout: (RCTPromiseResolveBlock)resolve

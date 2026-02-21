@@ -322,6 +322,59 @@ type ApphudSdkPresenterProvider = {
 const ApphudSdkBase = _ApphudSdk as IApphudSdk;
 
 export const ApphudSdk: IApphudSdk & ApphudSdkPresenterProvider = {
-  ...ApphudSdkBase,
-  createPresenter: (options) => new PaywallScreenPresenter(options),
+  start: (options: StartProperties) => ApphudSdkBase.start(options),
+  startManually: (options: StartProperties) =>
+    ApphudSdkBase.startManually(options),
+  userId: () => ApphudSdkBase.userId(),
+  placements: () => ApphudSdkBase.placements(),
+  paywallShown: (options: PaywallLogsInfo) =>
+    ApphudSdkBase.paywallShown(options),
+  paywallClosed: (options: PaywallLogsInfo) =>
+    ApphudSdkBase.paywallClosed(options),
+  products: () => ApphudSdkBase.products(),
+  hasPremiumAccess: () => ApphudSdkBase.hasPremiumAccess(),
+  hasActiveSubscription: () => ApphudSdkBase.hasActiveSubscription(),
+  purchase: (props: ApphudPurchaseProps) => ApphudSdkBase.purchase(props),
+  restorePurchases: () => ApphudSdkBase.restorePurchases(),
+  syncPurchasesInObserverMode: () =>
+    ApphudSdkBase.syncPurchasesInObserverMode(),
+  subscription: () => ApphudSdkBase.subscription(),
+  subscriptions: () => ApphudSdkBase.subscriptions(),
+  nonRenewingPurchases: () => ApphudSdkBase.nonRenewingPurchases(),
+  isNonRenewingPurchaseActive: (productIdentifier: string) =>
+    ApphudSdkBase.isNonRenewingPurchaseActive(productIdentifier),
+  setAttribution: (options: AttributionProperties) =>
+    ApphudSdkBase.setAttribution(options),
+  attributeFromWeb: (options: Record<string, string>) =>
+    ApphudSdkBase.attributeFromWeb(options),
+  setUserProperty: (args: {
+    key: ApphudUserPropertyKey | string;
+    value: any;
+    setOnce: boolean;
+  }) => ApphudSdkBase.setUserProperty(args),
+  incrementUserProperty: (args: {
+    key: ApphudUserPropertyKey | string;
+    by: number;
+  }) => ApphudSdkBase.incrementUserProperty(args),
+  collectDeviceIdentifiers: () => ApphudSdkBase.collectDeviceIdentifiers(),
+  setDeviceIdentifiers: (options: Partial<Identifiers>) =>
+    ApphudSdkBase.setDeviceIdentifiers(options),
+  optOutOfTracking: () => ApphudSdkBase.optOutOfTracking(),
+  logout: () => ApphudSdkBase.logout(),
+  enableDebugLogs: () => ApphudSdkBase.enableDebugLogs(),
+  submitPushNotificationsToken: (token: string) =>
+    ApphudSdkBase.submitPushNotificationsToken(token),
+  handlePushNotification: (payload: any) =>
+    ApphudSdkBase.handlePushNotification(payload),
+  idfv: () => ApphudSdkBase.idfv(),
+  preloadPaywallScreens:
+    _ApphudSdk.preloadPaywallScreens &&
+    ((placementIdentifiers: string[]) =>
+      _ApphudSdk.preloadPaywallScreens(placementIdentifiers)),
+  unloadPaywallScreen:
+    _ApphudSdk.unloadPaywallScreen &&
+    ((options: { placementIdentifier?: string }) =>
+      _ApphudSdk.unloadPaywallScreen(options)),
+  createPresenter: (options: PaywallScreenPresenterOptions) =>
+    new PaywallScreenPresenter(options),
 };
