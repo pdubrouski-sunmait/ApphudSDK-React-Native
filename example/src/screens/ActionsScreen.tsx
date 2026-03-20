@@ -30,7 +30,11 @@ export default function ActionsScreen({ navigation }: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      ApphudSdk.placements().then(setPlacements);
+      ApphudSdk.placements({
+        forceRefresh: true,
+        preferredTimeout: 21,
+        maxAttempts: 4,
+      }).then(setPlacements);
     }, [])
   );
 

@@ -147,7 +147,9 @@ export default function PaywallScreen({
 
   React.useEffect(() => {
     const findPaywall = async () => {
-      const paywalls = (await ApphudSdk.placements())
+      const paywalls = (
+        await ApphudSdk.placements({ forceRefresh: true, preferredTimeout: 21 })
+      )
         .map((x) => x.paywall)
         .filter((x) => x) as ApphudPaywall[];
 
@@ -157,12 +159,17 @@ export default function PaywallScreen({
           setPaywallScreenPresenter(
             new PaywallScreenPresenter({
               placementIdentifier: paywall.placementIdentifier,
+              forceRefresh: true,
+              preferredTimeout: 21,
+              maxAttempts: 4,
             })
           );
 
           ApphudSdk.paywallShown({
             paywallIdentifier: paywall.identifier,
             placementIdentifier: paywall.placementIdentifier,
+            forceRefresh: true,
+            preferredTimeout: 21,
           });
 
           setProductsProps(prepareProducts(paywall.products));

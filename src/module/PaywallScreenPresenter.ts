@@ -1,4 +1,9 @@
-import type { ApphudProduct, ApphudPurchaseResult, IDisposable } from './types';
+import type {
+  ApphudProduct,
+  ApphudPurchaseResult,
+  IDisposable,
+  PlacementsOptions,
+} from './types';
 import {
   NativeModules,
   NativeEventEmitter,
@@ -17,7 +22,7 @@ export type Options = {
    * Used by the native layer to determine screen configuration.
    */
   placementIdentifier: string;
-};
+} & PlacementsOptions;
 
 /**
  * Internal counter used to generate unique identifiers

@@ -101,6 +101,12 @@ class PaywallScreenView : UIView {
     }
   }
   
+  @objc var requestPlacementsOptions: NSDictionary? = nil {
+    didSet {
+      setupView()
+    }
+  }
+  
   func reload() {
     setupView()
   }
@@ -112,9 +118,12 @@ class PaywallScreenView : UIView {
     }
     
     self.onStartLoading?(["placementIdentifier": placementIdentifier])
+    
+    let maxAttempts = requestPlacementsOptions?["maxAttempts"] as? Int ?? APPHUD_DEFAULT_RETRIES
+    let forceRefresh = requestPlacementsOptions?["forceRefresh"] as? Bool ?? false
 
     Apphud
-      .fetchPlacements {
+      .fetchPlacements(maxAttempts: maxAttempts, forceRefresh: forceRefresh) {
         [weak self, placementIdentifier] placements,
         error in
         guard let self = self,

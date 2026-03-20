@@ -1,5 +1,6 @@
 package com.reactnativeapphudsdk
 
+import com.apphud.sdk.APPHUD_DEFAULT_MAX_TIMEOUT
 import com.apphud.sdk.ApphudAttributionData
 import com.apphud.sdk.ApphudAttributionProvider
 import com.facebook.react.bridge.ReadableMap
@@ -8,6 +9,11 @@ internal data class AttributionParams(
   val identifier: String?,
   val provider: ApphudAttributionProvider,
   val data: ApphudAttributionData
+)
+
+internal data class PlacementsOptions(
+  val forceRefresh: Boolean,
+  val preferredTimeout: Double
 )
 
 private fun Map<String, Any?>.removeNullableValues(): Map<String, Any> {
@@ -54,4 +60,14 @@ internal fun ReadableMap.getAttributionParams(): AttributionParams? {
       custom2 = data.getString("custom2")
     )
   )
+}
+
+internal fun ReadableMap.getPlacementsOptions(): PlacementsOptions {
+  val forceRefresh = getBoolean("forceRefresh")
+
+  val preferredTimeout = if (hasKey("preferredTimeout"))
+    getDouble("preferredTimeout")
+  else APPHUD_DEFAULT_MAX_TIMEOUT
+
+  return PlacementsOptions(forceRefresh, preferredTimeout)
 }

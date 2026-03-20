@@ -64,7 +64,8 @@ RCT_EXTERN_METHOD(attributeFromWeb:(NSDictionary*)args
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(placements:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(placements:(NSDictionary*)options
+                  withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(idfv:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)

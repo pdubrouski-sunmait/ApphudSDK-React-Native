@@ -29,8 +29,11 @@ class PaywallscreenPresenter : RCTEventEmitter {
       return
     }
     
+    let maxAttempts = options["maxAttempts"] as? Int ?? APPHUD_DEFAULT_RETRIES
+    let forceRefresh = options["forceRefresh"] as? Bool ?? false
+    
     Apphud
-      .fetchPlacements {
+      .fetchPlacements(maxAttempts: maxAttempts, forceRefresh: forceRefresh) {
         [
           paywallScreenPresenterId,
           placementIdentifier,

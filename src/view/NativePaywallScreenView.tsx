@@ -9,7 +9,11 @@ import {
   type ViewStyle,
   type ViewProps,
 } from 'react-native';
-import { type ApphudProduct, type ApphudPurchaseResult } from '../module';
+import {
+  type ApphudProduct,
+  type ApphudPurchaseResult,
+  type PlacementsOptions,
+} from '../module';
 import { LoadingContent } from './LoadingContent';
 import { ErrorContent } from './ErrorContent';
 import { type LoadingViewError } from './types';
@@ -78,6 +82,24 @@ const NativePaywallScreenView = requireNativeComponent<{
    * Style applied to the native view.
    */
   style?: ViewStyle;
+  /**
+   * Options for requesting placements, such as retry attempts and force refresh.
+   * This prop is optional and can be used to customize the behavior of placement requests.
+   * If not provided, default options will be used.
+   *
+   * Use as const or use the `useMemo` (`useRef`) hook for remove rerendering on every render due to object reference change.
+   *
+   * Example usage:
+   * ```tsx
+   * const REQUEST_PLACEMENTS_OPTIONS = { maxAttempts: 4, forceRefresh: true };
+   *
+   * <PaywallScreenView
+   *   placementIdentifier={placementId}
+   *   requestPlacementsOptions={REQUEST_PLACEMENTS_OPTIONS}
+   * />
+   * ```
+   */
+  requestPlacementsOptions?: Partial<PlacementsOptions>;
 }>('PaywallScreenView');
 
 type Props = ComponentProps<typeof NativePaywallScreenView> &
