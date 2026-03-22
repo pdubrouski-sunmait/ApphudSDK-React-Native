@@ -132,7 +132,10 @@ class ApphudSdk: NSObject {
           }
         }
       } else if let paywallId {
-        let paywalls = await ApphudPaywallsHelper.getPaywalls()
+        let maxAttempts = args["maxAttempts"] as? Int ?? APPHUD_DEFAULT_RETRIES
+        let forceRefresh = args["forceRefresh"] as? Bool ?? false
+
+        let paywalls = await ApphudPaywallsHelper.getPaywalls(maxAttempts: maxAttempts, forceRefresh: forceRefresh)
         
         for paywall in paywalls where product == nil {
           product = paywall.products.first { product in
@@ -201,11 +204,8 @@ class ApphudSdk: NSObject {
     }
     
     Task {
-      let paywall = await ApphudPaywallsHelper.getPaywall(
-        paywallIdentifier: paywallIdentifier,
-        placementIdentifier: placementIdentifier
-      )
-      
+      let paywall = await ApphudPaywallsHelper.getPaywall(options: options)
+
       if let paywall {
         Apphud.paywallShown(paywall)
       }
