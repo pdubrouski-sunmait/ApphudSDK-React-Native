@@ -63,7 +63,7 @@ internal fun ReadableMap.getAttributionParams(): AttributionParams? {
 }
 
 internal fun ReadableMap.getPlacementsOptions(): PlacementsOptions {
-  val forceRefresh = getBoolean("forceRefresh")
+  val forceRefresh = if (hasKey("forceRefresh")) getBoolean("forceRefresh") else false
 
   val preferredTimeout = if (hasKey("preferredTimeout"))
     getDouble("preferredTimeout")
