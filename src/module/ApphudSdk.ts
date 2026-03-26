@@ -301,6 +301,13 @@ interface IApphudSdk {
    *
    */
   unloadPaywallScreen(options: { placementIdentifier?: string }): Promise<void>;
+
+  /**
+   * Updates the user ID for the current user. Use only for authorized user session.
+   * @param userID - The new user ID to be set for the current user.
+   * @returns A promise that resolves to the updated user object if the update is successful, or null if the update fails.
+   */
+  updateUserID(userID: string): Promise<ApphudUser | null>;
 }
 
 const { ApphudSdk: _ApphudSdk } = NativeModules;
@@ -380,6 +387,7 @@ export const ApphudSdk: IApphudSdk & ApphudSdkPresenterProvider = {
     _ApphudSdk.unloadPaywallScreen &&
     ((options: { placementIdentifier?: string }) =>
       _ApphudSdk.unloadPaywallScreen(options)),
+  updateUserID: (userID: string) => ApphudSdkBase.updateUserID(userID),
   createPresenter: (options: PaywallScreenPresenterOptions) =>
     new PaywallScreenPresenter(options),
 };

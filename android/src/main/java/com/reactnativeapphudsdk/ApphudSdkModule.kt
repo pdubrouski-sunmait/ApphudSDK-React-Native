@@ -343,6 +343,11 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
     promise.resolve(null)
   }
 
+  @ReactMethod
+  fun updateUserID(userID: String, promise: Promise) {
+    Apphud.updateUserId(userID) { promise.resolve(it?.toMap()) }
+  }
+
   private fun getUserPropertyKey(key: String): ApphudUserPropertyKey {
     return when (key) {
       "age" -> ApphudUserPropertyKey.Age

@@ -160,6 +160,12 @@ export default function ActionsScreen({ navigation }: Props) {
           </ListItem.Content>
         </ListItem>
 
+        <ListItem onPress={() => navigation.navigate('UpdateUserID')}>
+          <ListItem.Content>
+            <ListItem.Title>Update user id</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+
         <ListItem
           onPress={() => {
             ApphudSdk.logout().then(() => {

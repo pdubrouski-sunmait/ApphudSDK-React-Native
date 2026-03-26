@@ -434,4 +434,10 @@ class ApphudSdk: NSObject {
   func idfv(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
     resolve(UIDevice.current.identifierForVendor?.uuidString)
   }
+  
+  @MainActor
+  @objc(updateUserID:withResolver:withRejecter:)
+  func updateUserID(userID: String, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    Apphud.updateUserID(userID) { resolve($0?.toMap())  }
+  }
 }

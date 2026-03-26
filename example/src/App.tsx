@@ -9,6 +9,7 @@ import PaywallScreen from './screens/PaywallScreen';
 import PlacementsScreen from './screens/PlacementsScreen';
 import SetAttributionScreen from './screens/SetAttributionScreen';
 import PaywallNativeScreen from './screens/PaywallNativeScreen';
+import UpdateUserIDScreen from './screens/UpdateUserIDScreen';
 
 const Stack = createStackNavigator();
 
@@ -69,6 +70,7 @@ function App() {
             options={{ header: () => null }}
           />
         </Stack.Group>
+        <Stack.Screen name="UpdateUserID" component={UpdateUserIDScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

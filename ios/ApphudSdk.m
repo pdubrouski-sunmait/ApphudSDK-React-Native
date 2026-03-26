@@ -76,6 +76,9 @@ RCT_EXTERN_METHOD(unloadPaywallScreen:(NSDictionary*)options
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(updateUserID:(NSString*)args
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup {
   return YES; // Requires setup on the main JavaScript thread
