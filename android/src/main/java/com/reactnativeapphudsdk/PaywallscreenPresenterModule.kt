@@ -25,12 +25,12 @@ class PaywallscreenPresenterModule(private val reactApplicationContext: ReactApp
   fun displayPaywallScreen(options: ReadableMap) {
     val paywallScreenPresenterId = options.getString("paywallScreenPresenterId") ?: return
 
-    val placementIdentifier = options.getString("placementIdentifier") ?: run {
+    options.getString("placementIdentifier") ?: run {
       emit(PaywallscreenPresenterEvent.ERROR, paywallScreenPresenterId, "Paywall not not found")
       return
     }
 
-    Utils.paywall(null, placementIdentifier) { paywall ->
+    Utils.paywall(options) { paywall ->
       if (paywall == null) {
         emit(PaywallscreenPresenterEvent.ERROR, paywallScreenPresenterId, "Paywall not not found")
         return@paywall

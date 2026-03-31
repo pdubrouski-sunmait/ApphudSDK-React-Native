@@ -132,7 +132,10 @@ class ApphudSdk: NSObject {
           }
         }
       } else if let paywallId {
-        let paywalls = await ApphudPaywallsHelper.getPaywalls()
+        let maxAttempts = args["maxAttempts"] as? Int ?? APPHUD_DEFAULT_RETRIES
+        let forceRefresh = args["forceRefresh"] as? Bool ?? false
+
+        let paywalls = await ApphudPaywallsHelper.getPaywalls(maxAttempts: maxAttempts, forceRefresh: forceRefresh)
         
         for paywall in paywalls where product == nil {
           product = paywall.products.first { product in
@@ -201,11 +204,8 @@ class ApphudSdk: NSObject {
     }
     
     Task {
-      var paywall = await ApphudPaywallsHelper.getPaywall(
-        paywallIdentifier: paywallIdentifier,
-        placementIdentifier: placementIdentifier
-      )
-      
+      let paywall = await ApphudPaywallsHelper.getPaywall(options: options)
+
       if let paywall {
         Apphud.paywallShown(paywall)
       }
@@ -280,7 +280,9 @@ class ApphudSdk: NSObject {
         data: attributionParams.data,
         from: attributionParams.provider,
         identifer: attributionParams.identifier
-      ) { resolve($0) }
+      ) { res, dict in
+        resolve(res)
+      }
   }
 
   @objc(setUserProperty:)
@@ -368,13 +370,16 @@ class ApphudSdk: NSObject {
       }
     }
   
-  @MainActor @objc(placements:withRejecter:)
+  @MainActor @objc(placements:withResolver:withRejecter:)
   func placements(
+    options: NSDictionary,
     resolve: @escaping RCTPromiseResolveBlock,
     reject: @escaping RCTPromiseRejectBlock
   ) {
+    let maxAttempts = options["maxAttempts"] as? Int ?? APPHUD_DEFAULT_RETRIES
+    let forceRefresh = options["forceRefresh"] as? Bool ?? false
     
-    Apphud.fetchPlacements { placements, error in
+    Apphud.fetchPlacements(maxAttempts: maxAttempts, forceRefresh: forceRefresh) { placements, error in
       if let error {
         reject("Error", error.localizedDescription, nil)
         return
@@ -402,7 +407,10 @@ class ApphudSdk: NSObject {
       return
     }
     
-    Apphud.fetchPlacements { [resolve, reject] placements, error in
+    let maxAttempts = options["maxAttempts"] as? Int ?? APPHUD_DEFAULT_RETRIES
+    let forceRefresh = options["forceRefresh"] as? Bool ?? false
+    
+    Apphud.fetchPlacements(maxAttempts: maxAttempts, forceRefresh: forceRefresh) { [resolve, reject] placements, error in
       if let error {
         reject("Error", error.localizedDescription, nil)
         return
@@ -425,5 +433,11 @@ class ApphudSdk: NSObject {
   @objc(idfv:withRejecter:)
   func idfv(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
     resolve(UIDevice.current.identifierForVendor?.uuidString)
+  }
+  
+  @MainActor
+  @objc(updateUserID:withResolver:withRejecter:)
+  func updateUserID(userID: String, resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    Apphud.updateUserID(userID) { resolve($0?.toMap())  }
   }
 }

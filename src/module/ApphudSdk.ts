@@ -18,6 +18,7 @@ import type {
   ApphudPlacement,
   Identifiers,
   PaywallLogsInfo,
+  PlacementsOptions,
 } from './types';
 
 interface IApphudSdk {
@@ -50,19 +51,19 @@ interface IApphudSdk {
    * the user's involvement in A/ B testing, if applicable.
    *
    */
-  placements(): Promise<ApphudPlacement[]>;
+  placements(options: Partial<PlacementsOptions>): Promise<ApphudPlacement[]>;
 
   /**
    * Available on iOS and Android.
    * Logs a "Paywall Shown" (Paywall View) event which is required for A/B Testing Analytics.
    */
-  paywallShown(options: PaywallLogsInfo): void;
+  paywallShown(options: PaywallLogsInfo & Partial<PlacementsOptions>): void;
 
   /**
    * Available on iOS and Android.
    * Logs a "Paywall Closed" event. Optional.
    */
-  paywallClosed(options: PaywallLogsInfo): void;
+  paywallClosed(options: PaywallLogsInfo & Partial<PlacementsOptions>): void;
 
   /**
    * Available on iOS and Android.
@@ -106,7 +107,9 @@ interface IApphudSdk {
    * @param props - object with productId and optional paywallId, offerToken, isConsumable. See `ApphudPurchaseProps` for details.
    * @returns `ApphudPurchaseResult` object. See `ApphudPurchaseResult` for details.
    */
-  purchase(props: ApphudPurchaseProps): Promise<ApphudPurchaseResult>;
+  purchase(
+    props: ApphudPurchaseProps & Partial<PlacementsOptions>
+  ): Promise<ApphudPurchaseResult>;
 
   /**
    * Available on iOS and Android.
@@ -298,6 +301,13 @@ interface IApphudSdk {
    *
    */
   unloadPaywallScreen(options: { placementIdentifier?: string }): Promise<void>;
+
+  /**
+   * Updates the user ID for the current user. Use only for authorized user session.
+   * @param userID - The new user ID to be set for the current user.
+   * @returns A promise that resolves to the updated user object if the update is successful, or null if the update fails.
+   */
+  updateUserID(userID: string): Promise<ApphudUser | null>;
 }
 
 const { ApphudSdk: _ApphudSdk } = NativeModules;
@@ -326,15 +336,17 @@ export const ApphudSdk: IApphudSdk & ApphudSdkPresenterProvider = {
   startManually: (options: StartProperties) =>
     ApphudSdkBase.startManually(options),
   userId: () => ApphudSdkBase.userId(),
-  placements: () => ApphudSdkBase.placements(),
-  paywallShown: (options: PaywallLogsInfo) =>
+  placements: (options?: Partial<PlacementsOptions>) =>
+    ApphudSdkBase.placements(options ?? {}),
+  paywallShown: (options: PaywallLogsInfo & Partial<PlacementsOptions>) =>
     ApphudSdkBase.paywallShown(options),
   paywallClosed: (options: PaywallLogsInfo) =>
     ApphudSdkBase.paywallClosed(options),
   products: () => ApphudSdkBase.products(),
   hasPremiumAccess: () => ApphudSdkBase.hasPremiumAccess(),
   hasActiveSubscription: () => ApphudSdkBase.hasActiveSubscription(),
-  purchase: (props: ApphudPurchaseProps) => ApphudSdkBase.purchase(props),
+  purchase: (props: ApphudPurchaseProps & Partial<PlacementsOptions>) =>
+    ApphudSdkBase.purchase(props),
   restorePurchases: () => ApphudSdkBase.restorePurchases(),
   syncPurchasesInObserverMode: () =>
     ApphudSdkBase.syncPurchasesInObserverMode(),
@@ -375,6 +387,7 @@ export const ApphudSdk: IApphudSdk & ApphudSdkPresenterProvider = {
     _ApphudSdk.unloadPaywallScreen &&
     ((options: { placementIdentifier?: string }) =>
       _ApphudSdk.unloadPaywallScreen(options)),
+  updateUserID: (userID: string) => ApphudSdkBase.updateUserID(userID),
   createPresenter: (options: PaywallScreenPresenterOptions) =>
     new PaywallScreenPresenter(options),
 };

@@ -24,7 +24,9 @@ export default function PlacementsScreen() {
   const navigation = useNavigation<NavigationProp<Record<string, any>>>();
 
   React.useEffect(() => {
-    ApphudSdk.placements().then(setPlacements);
+    ApphudSdk.placements({ forceRefresh: true, preferredTimeout: 21 }).then(
+      setPlacements
+    );
   }, []);
 
   return (

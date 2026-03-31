@@ -2,6 +2,7 @@
 
 @interface RCT_EXTERN_MODULE(PaywallScreenViewManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(placementIdentifier, NSString)
+RCT_EXPORT_VIEW_PROPERTY(requestPlacementsOptions, NSDictionary)
 RCT_EXPORT_VIEW_PROPERTY(onStartLoading, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onReceiveView, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadingError, RCTBubblingEventBlock)

@@ -6,6 +6,8 @@ import {
 } from '@react-navigation/native';
 import { PaywallScreenView } from '@apphud/react-native-apphud-sdk';
 
+const REQUEST_PLACEMENTS_OPTIONS = { maxAttempts: 4, forceRefresh: true };
+
 const PaywallNativeScreen = () => {
   const route = useRoute<RouteProp<Record<string, Record<string, any>>>>();
   const navigation = useNavigation();
@@ -24,6 +26,7 @@ const PaywallNativeScreen = () => {
         console.log('RN: onCloseButtonTapped close button tapped');
         navigation.goBack();
       }}
+      requestPlacementsOptions={REQUEST_PLACEMENTS_OPTIONS}
     />
   );
 };

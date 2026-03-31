@@ -663,3 +663,16 @@ export type ApphudPaywallScreenShowResult =
 export interface IDisposable {
   dispose(): void;
 }
+
+/**
+ * Available on iOS and Android.
+ * Options for requesting placements and paywalls. Can be passed to `Apphud.placements` method and `PaywallScreenView` component.
+ * If not provided, default options will be used.
+ * preferredTimeout android only, maxAttempts ios only, forceRefresh for both platforms
+ *
+ */
+export type PlacementsOptions = {
+  forceRefresh: boolean;
+  preferredTimeout: number;
+  maxAttempts: number;
+};

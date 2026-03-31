@@ -2,6 +2,7 @@ package com.reactnativeapphudsdk
 
 import android.telecom.Call
 import android.util.Log
+import com.apphud.sdk.APPHUD_DEFAULT_MAX_TIMEOUT
 import com.apphud.sdk.Apphud
 import com.apphud.sdk.ApphudAttributionProvider
 import com.apphud.sdk.ApphudPurchasesRestoreResult
@@ -76,10 +77,7 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun paywallShown(options: ReadableMap) {
-    val paywallIdentifier = options.getString("paywallIdentifier")
-    val placementIdentifier = options.getString("placementIdentifier")
-
-    Utils.paywall(paywallIdentifier, placementIdentifier) { paywall ->
+    Utils.paywall(options) { paywall ->
       paywall?.let {
         Apphud.paywallShown(paywall)
       }
@@ -95,11 +93,7 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
       return
     }
 
-
-    val placementId = args.getString("placementIdentifier")
-    val paywallId = args.getString("paywallIdentifier")
-
-    Utils.paywall(paywallId, placementId) { paywall ->
+    Utils.paywall(args) { paywall ->
       val product = paywall?.products?.find { it.productId == productId }
 
       val isSub = product?.productDetails?.productType?.lowercase() == "subs"
@@ -320,9 +314,11 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun placements(promise: Promise) {
-    Apphud.fetchPlacements { placements, error ->
-      if (error != null && placements.isNullOrEmpty()) {
+  fun placements(options: ReadableMap, promise: Promise) {
+    val placementsOptions = options.getPlacementsOptions()
+
+    Apphud.fetchPlacements(preferredTimeout = placementsOptions.preferredTimeout, forceRefresh = placementsOptions.forceRefresh) { placements, error ->
+      if (error != null && placements.isEmpty()) {
         promise.reject("Error", error.localizedMessage)
         return@fetchPlacements
       }
@@ -345,6 +341,11 @@ class ApphudSdkModule(reactContext: ReactApplicationContext) :
   fun logout(promise: Promise) {
     Apphud.logout()
     promise.resolve(null)
+  }
+
+  @ReactMethod
+  fun updateUserID(userID: String, promise: Promise) {
+    Apphud.updateUserId(userID) { promise.resolve(it?.toMap()) }
   }
 
   private fun getUserPropertyKey(key: String): ApphudUserPropertyKey {
