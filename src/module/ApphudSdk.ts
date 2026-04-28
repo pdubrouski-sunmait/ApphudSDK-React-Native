@@ -356,6 +356,8 @@ export const ApphudSdk: IApphudSdk & ApphudSdkPresenterProvider = {
   hasActiveSubscription: () => ApphudSdkBase.hasActiveSubscription(),
   purchase: (props: ApphudPurchaseProps & Partial<PlacementsOptions>) =>
     ApphudSdkBase.purchase(props),
+  checkEligibilitiesForIntroductoryOffer: (productIdentifier: string) =>
+    ApphudSdkBase.checkEligibilitiesForIntroductoryOffer(productIdentifier),
   restorePurchases: () => ApphudSdkBase.restorePurchases(),
   syncPurchasesInObserverMode: () =>
     ApphudSdkBase.syncPurchasesInObserverMode(),
