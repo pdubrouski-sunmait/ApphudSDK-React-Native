@@ -120,6 +120,15 @@ interface IApphudSdk {
   restorePurchases(): Promise<RestorePurchase>;
 
   /**
+   * Available on iOS only.
+   *
+   * Check eligibility for introductory offer
+   */
+  checkEligibilitiesForIntroductoryOffer(
+    productIdentifier: string
+  ): Promise<boolean>;
+
+  /**
    * Available on Android only.
    *
    * Synchronizes user's purchases with Apphud servers.

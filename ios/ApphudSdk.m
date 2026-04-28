@@ -44,6 +44,9 @@ RCT_EXTERN_METHOD(syncPurchasesInObserverMode:(RCTPromiseResolveBlock)resolve
 
 RCT_EXTERN_METHOD(userId:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(checkEligibilitiesForIntroductoryOffer:(NSString)productIdentifier
+                   withResolver:(RCTPromiseResolveBlock)resolve
+                   withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(collectDeviceIdentifiers)
 RCT_EXTERN_METHOD(setDeviceIdentifiers:(NSDictionary*)options)

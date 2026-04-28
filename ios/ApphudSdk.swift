@@ -349,6 +349,22 @@ class ApphudSdk: NSObject {
       }
     }
   }
+
+  @objc(checkEligibilitiesForIntroductoryOffer:withResolver:withRejecter:)
+  func checkEligibilitiesForIntroductoryOffer(productIdentifier: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+      Apphud.fetchProducts { products, error in 
+          let product = products.first { $0.productIdentifier == productIdentifier };
+        
+          if (product == nil) {
+              reject("Error", "Product not found", nil);
+              return;
+          }
+            
+          Apphud.checkEligibilityForIntroductoryOffer(product: product!, callback: { result in
+              resolve(result)
+          })
+      }
+  }
   
   @MainActor @objc(attributeFromWeb:withResolver:withRejecter:)
   func attributeFromWeb(
