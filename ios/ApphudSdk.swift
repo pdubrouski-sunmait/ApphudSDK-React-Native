@@ -212,6 +212,24 @@ class ApphudSdk: NSObject {
     }
   }
 
+  @objc(paywallClosed:)
+  func paywallClosed(options: [AnyHashable : Any]) {
+    let placementIdentifier = options["placementIdentifier"] as? String
+    let paywallIdentifier = options["paywallIdentifier"] as? String
+    
+    if placementIdentifier == nil && paywallIdentifier == nil {
+      return
+    }
+    
+    Task {
+      let paywall = await ApphudPaywallsHelper.getPaywall(options: options)
+
+      if let paywall {
+        Apphud.paywallClosed(paywall)
+      }
+    }
+  }
+
   @MainActor @objc(subscription:withRejecter:)
   func subscription(resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
     guard let subscription = Apphud.subscription() else {

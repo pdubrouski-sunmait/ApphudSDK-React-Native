@@ -51,6 +51,7 @@ RCT_EXTERN_METHOD(checkEligibilitiesForIntroductoryOffer:(NSString)productIdenti
 RCT_EXTERN_METHOD(collectDeviceIdentifiers)
 RCT_EXTERN_METHOD(setDeviceIdentifiers:(NSDictionary*)options)
 RCT_EXTERN_METHOD(paywallShown:(NSDictionary*)options)
+RCT_EXTERN_METHOD(paywallClosed:(NSDictionary*)options)
 RCT_EXTERN_METHOD(optOutOfTracking)
 RCT_EXTERN_METHOD(enableDebugLogs)
 RCT_EXTERN_METHOD(logout: (RCTPromiseResolveBlock)resolve
