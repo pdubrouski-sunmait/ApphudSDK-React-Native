@@ -1,5 +1,7 @@
+import AdServices
 import ApphudSDK
 import StoreKit
+import Combine
 
 @objc(ApphudSdk)
 class ApphudSdk: NSObject {
@@ -27,12 +29,12 @@ class ApphudSdk: NSObject {
     let userID = options["userId"] as? String;
     let observerMode = options["observerMode"] as? Bool ?? true;
     
-    DispatchQueue.main.async {
+    Task(priority: .high) {
 #if DEBUG
       ApphudUtils.enableAllLogs()
 #endif
       
-      Apphud
+      await Apphud
         .start(
           apiKey: apiKey,
           userID: userID,
@@ -40,7 +42,66 @@ class ApphudSdk: NSObject {
         ) { user in
           resolve(user.toMap())
         }
+      setupPlacements()
+      try? submitASAAttributionData()
     }
+  }
+
+  func setupPlacements() {
+        Apphud.deferPlacements()
+        checkAttributionData()
+  }
+
+  func checkAttributionData() {
+        Task(priority: .high) {
+            let asa = try? await fetchAttributionData()
+            Apphud.setUserProperty(key: .init("asa"), value: asa ?? false)
+        }
+  }
+
+  func submitASAAttributionData() throws(ApphudServiceErrorType) {
+        guard let token = try? AAAttribution.attributionToken() else {
+            throw .setAttributionError
+        }
+        
+        Apphud.setAttribution(
+            data: nil,
+            from: .appleAdsAttribution,
+            identifer: token,
+            callback: nil)
+  }
+
+  func fetchAttributionData() async throws -> Bool {
+        guard let token = try? AAAttribution.attributionToken() else {
+            throw AppleAttributionErrorType.missingAttributionToken
+        }
+        
+        let urlString = "https://api-adservices.apple.com/api/v1/"
+        let url = URL(string: urlString)
+        
+        guard let url else {
+            throw AppleAttributionErrorType.missingRequestUrl
+        }
+        
+        guard let tokenData = token.data(using: .utf8) else {
+            throw AppleAttributionErrorType.missingAttributionTokenData
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = tokenData
+        
+        let data = try await URLSession.shared.data(for: request)
+        guard let json = try? JSONSerialization.jsonObject(with: data.0) as? [String: Any] else {
+            throw AppleAttributionErrorType.cannotParseJsonData
+        }
+        
+        let result = AppleAttributionModel(from: json)
+        let dummyOrganizationId = 1234567890
+        let attribution = result.attribution ?? false
+        let asa = (result.orgId == dummyOrganizationId ? false : (attribution == true))
+        return asa
   }
     
   @objc(startManually:withResolver:withRejecter:)
